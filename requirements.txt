@@ -1,5 +1,5 @@
 Django==5.0.2
-python-dotenv==1.0.0
+python-dotenv==1.0.1
 Pillow==10.2.0
 django-crispy-forms==2.1
 crispy-bootstrap5==2023.10
@@ -9,7 +9,14 @@ python-dateutil==2.8.2
 django-filter==23.5
 djangorestframework==3.14.0
 django-widget-tweaks==1.5.0
+django-admin-interface
+# https://pypi.org/project/django-admin-interface/
+django-colorfield
+# https://pypi.org/project/django-colorfield/
+reportlab
+pyotp
+qrcode
+openpyxl
+weasyprint
 psycopg2-binary==2.9.9
-django-admin-interface==0.28.0
-gunicorn==21.2.0
-reportlab 
+dj-database-url==2.1.0 

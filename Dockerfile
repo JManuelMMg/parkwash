@@ -30,8 +30,6 @@ COPY . .
 # Configurar variables de entorno necesarias
 ENV DJANGO_SETTINGS_MODULE=parking_system.settings
 ENV PYTHONUNBUFFERED=1
-ENV DJANGO_CACHE_BACKEND=django.core.cache.backends.redis.RedisCache
-ENV DJANGO_CACHE_LOCATION=redis://redis:6379/1
 
 # Recolectar archivos estáticos
 RUN python manage.py collectstatic --noinput

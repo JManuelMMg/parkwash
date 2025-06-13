@@ -7,13 +7,6 @@ while ! nc -z db 5432; do
 done
 echo "Database is ready!"
 
-# Esperar a que Redis esté listo
-echo "Waiting for Redis..."
-while ! nc -z redis 6379; do
-  sleep 0.1
-done
-echo "Redis is ready!"
-
 # Aplicar migraciones
 echo "Applying migrations..."
 python manage.py migrate
@@ -24,4 +17,4 @@ python manage.py collectstatic --noinput
 
 # Iniciar el servidor
 echo "Starting server..."
-gunicorn parking.wsgi:application --bind 0.0.0.0:8000 --workers 4 --threads 2 
+python manage.py runserver 0.0.0.0:8000 
