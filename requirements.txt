@@ -11,4 +11,5 @@ djangorestframework==3.14.0
 django-widget-tweaks==1.5.0
 psycopg2-binary==2.9.9
 django-admin-interface==0.28.0
-gunicorn==21.2.0 
+gunicorn==21.2.0
+reportlab 
