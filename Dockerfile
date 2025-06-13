@@ -26,6 +26,10 @@ COPY . .
 # Crear directorios necesarios
 RUN mkdir -p /app/staticfiles /app/media
 
+# Configurar variables de entorno necesarias
+ENV DJANGO_SETTINGS_MODULE=parking.settings
+ENV PYTHONUNBUFFERED=1
+
 # Recolectar archivos estáticos
 RUN python manage.py collectstatic --noinput
 
