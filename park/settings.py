@@ -1,3 +1,7 @@
+import os
+import dj_database_url
+from pathlib import Path
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -83,12 +87,9 @@ USER_PREFERENCES = {
 }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'parking_db_3of6',
-        'USER': 'parking_user',
-        'PASSWORD': 'zIa9A8kicLBDh8hC4k6xq4DZXH9oQGfw',
-        'HOST': 'dpg-d13s1c8gjchc73fgk4t0-a.oregon-postgres.render.com',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 } 
