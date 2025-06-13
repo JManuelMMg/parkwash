@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Facturas{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Facturas</h3>
+                    
+                    {# Botón eliminado: <a href="{% url 'invoicing:generate_invoice' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Generar Nueva Factura</a> #}
+                    
+                </div>
+                <div class="card-body">
+                    <!-- Filtros -->
+                    <form method="get" class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label for="status" class="form-label">Estado</label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="">Todos</option>
+                                <option value="PENDING" {% if request.GET.status == 'PENDING' %}selected{% endif %}>Pendiente</option>
+                                <option value="PAID" {% if request.GET.status == 'PAID' %}selected{% endif %}>Pagada</option>
+                                <option value="OVERDUE" {% if request.GET.status == 'OVERDUE' %}selected{% endif %}>Vencida</option>
+                                <option value="CANCELLED" {% if request.GET.status == 'CANCELLED' %}selected{% endif %}>Cancelada</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="payment_method" class="form-label">Método de Pago</label>
+                            <select name="payment_method" id="payment_method" class="form-select">
+                                <option value="">Todos</option>
+                                <option value="cash" {% if request.GET.payment_method == 'cash' %}selected{% endif %}>Efectivo</option>
+                                <option value="card" {% if request.GET.payment_method == 'card' %}selected{% endif %}>Tarjeta</option>
+                                <option value="transfer" {% if request.GET.payment_method == 'transfer' %}selected{% endif %}>Transferencia</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter"></i> Filtrar</button>
+                        </div>
+                    </form>
+                    <!-- Fin Filtros -->
+                    {% if invoices %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Número de Factura</th>
+                                    <th>Usuario</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                    <th>Método de Pago</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for invoice in invoices %}
+                                <tr>
+                                    <td>{{ invoice.invoice_number }}</td>
+                                    <td>{{ invoice.user.username }}</td>
+                                    <td>{{ invoice.date_created|date:"d/m/Y" }}</td>
+                                    <td>${{ invoice.total_amount }}</td>
+                                    <td>
+                                        {% if invoice.payment_method %}
+                                            {{ invoice.get_payment_method_display|default:invoice.payment_method }}
+                                        {% else %}
+                                            ---
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if invoice.status == 'PENDING' %}
+                                        <span class="badge bg-warning">Pendiente</span>
+                                        {% elif invoice.status == 'PAID' %}
+                                        <span class="badge bg-success">Pagada</span>
+                                        {% elif invoice.status == 'OVERDUE' %}
+                                        <span class="badge bg-danger">Vencida</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">Cancelada</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'invoicing:invoice_detail' invoice.pk %}" 
+                                               class="btn btn-sm btn-info" title="Ver detalles">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if user.is_staff %}
+                                            <a href="{% url 'invoicing:update_invoice_status' invoice.pk %}" 
+                                               class="btn btn-sm btn-warning" title="Actualizar estado">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        No hay facturas disponibles.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

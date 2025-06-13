@@ -1,0 +1,417 @@
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
+#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
+# Feel free to rename the models, but don't rename db_table values or field names.
+from django.db import models
+
+
+class AdminInterfaceTheme(models.Model):
+    name = models.CharField(unique=True, max_length=50)
+    active = models.BooleanField()
+    title = models.CharField(max_length=50)
+    title_visible = models.BooleanField()
+    logo = models.CharField(max_length=100)
+    logo_visible = models.BooleanField()
+    css_header_background_color = models.CharField(max_length=10)
+    css_header_text_color = models.CharField(max_length=10)
+    css_header_link_color = models.CharField(max_length=10)
+    css_header_link_hover_color = models.CharField(max_length=10)
+    css_module_background_color = models.CharField(max_length=10)
+    css_module_text_color = models.CharField(max_length=10)
+    css_module_link_color = models.CharField(max_length=10)
+    css_module_link_hover_color = models.CharField(max_length=10)
+    css_module_rounded_corners = models.BooleanField()
+    css_generic_link_color = models.CharField(max_length=10)
+    css_generic_link_hover_color = models.CharField(max_length=10)
+    css_save_button_background_color = models.CharField(max_length=10)
+    css_save_button_background_hover_color = models.CharField(max_length=10)
+    css_save_button_text_color = models.CharField(max_length=10)
+    css_delete_button_background_color = models.CharField(max_length=10)
+    css_delete_button_background_hover_color = models.CharField(max_length=10)
+    css_delete_button_text_color = models.CharField(max_length=10)
+    list_filter_dropdown = models.BooleanField()
+    related_modal_active = models.BooleanField()
+    related_modal_background_color = models.CharField(max_length=10)
+    related_modal_rounded_corners = models.BooleanField()
+    logo_color = models.CharField(max_length=10)
+    title_color = models.CharField(max_length=10)
+    recent_actions_visible = models.BooleanField()
+    favicon = models.CharField(max_length=100)
+    related_modal_background_opacity = models.CharField(max_length=5)
+    env_name = models.CharField(max_length=50)
+    env_color = models.CharField(max_length=10)
+    env_visible_in_header = models.BooleanField()
+    env_visible_in_favicon = models.BooleanField()
+    related_modal_close_button_visible = models.BooleanField()
+    language_chooser_active = models.BooleanField()
+    language_chooser_display = models.CharField(max_length=10)
+    list_filter_sticky = models.BooleanField()
+    form_pagination_sticky = models.BooleanField()
+    form_submit_sticky = models.BooleanField()
+    css_module_background_selected_color = models.CharField(max_length=10)
+    css_module_link_selected_color = models.CharField(max_length=10)
+    logo_max_height = models.PositiveSmallIntegerField()
+    logo_max_width = models.PositiveSmallIntegerField()
+    foldable_apps = models.BooleanField()
+    language_chooser_control = models.CharField(max_length=20)
+    list_filter_highlight = models.BooleanField()
+    list_filter_removal_links = models.BooleanField()
+    show_fieldsets_as_tabs = models.BooleanField()
+    show_inlines_as_tabs = models.BooleanField()
+    css_generic_link_active_color = models.CharField(max_length=10)
+    collapsible_stacked_inlines = models.BooleanField()
+    collapsible_stacked_inlines_collapsed = models.BooleanField()
+    collapsible_tabular_inlines = models.BooleanField()
+    collapsible_tabular_inlines_collapsed = models.BooleanField()
+
+    class Meta:
+        managed = False
+        db_table = 'admin_interface_theme'
+
+
+class AuthGroup(models.Model):
+    name = models.CharField(unique=True, max_length=150)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_group'
+
+
+class AuthGroupPermissions(models.Model):
+    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
+    permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_group_permissions'
+        unique_together = (('group', 'permission'),)
+
+
+class AuthPermission(models.Model):
+    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
+    codename = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_permission'
+        unique_together = (('content_type', 'codename'),)
+
+
+class AuthUser(models.Model):
+    password = models.CharField(max_length=128)
+    last_login = models.DateTimeField(blank=True, null=True)
+    is_superuser = models.BooleanField()
+    username = models.CharField(unique=True, max_length=150)
+    last_name = models.CharField(max_length=150)
+    email = models.CharField(max_length=254)
+    is_staff = models.BooleanField()
+    is_active = models.BooleanField()
+    date_joined = models.DateTimeField()
+    first_name = models.CharField(max_length=150)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user'
+
+
+class AuthUserGroups(models.Model):
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user_groups'
+        unique_together = (('user', 'group'),)
+
+
+class AuthUserUserPermissions(models.Model):
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user_user_permissions'
+        unique_together = (('user', 'permission'),)
+
+
+class CarwashAppointment(models.Model):
+    appointment_time = models.DateTimeField()
+    status = models.CharField(max_length=20)
+    notes = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    vehicle = models.ForeignKey('CoreVehicle', models.DO_NOTHING)
+    service = models.ForeignKey('CarwashCarwashservice', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'carwash_appointment'
+
+
+class CarwashCarwashservice(models.Model):
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    service_type = models.CharField(max_length=50)
+    status = models.CharField(max_length=20)
+    vehicle = models.ForeignKey('CoreVehicle', models.DO_NOTHING, blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=5)  # max_digits and decimal_places have been guessed, as this database handles decimal fields as float
+
+    class Meta:
+        managed = False
+        db_table = 'carwash_carwashservice'
+
+
+class CoreLocation(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.CharField(max_length=255)
+    capacity = models.PositiveIntegerField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'core_location'
+
+
+class CoreVehicle(models.Model):
+    plate_number = models.CharField(unique=True, max_length=10)
+    vehicle_type = models.CharField(max_length=20)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    owner = models.ForeignKey(AuthUser, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'core_vehicle'
+
+
+class DjangoAdminLog(models.Model):
+    object_id = models.TextField(blank=True, null=True)
+    object_repr = models.CharField(max_length=200)
+    action_flag = models.PositiveSmallIntegerField()
+    change_message = models.TextField()
+    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    action_time = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_admin_log'
+
+
+class DjangoContentType(models.Model):
+    app_label = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'django_content_type'
+        unique_together = (('app_label', 'model'),)
+
+
+class DjangoMigrations(models.Model):
+    app = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    applied = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_migrations'
+
+
+class DjangoSession(models.Model):
+    session_key = models.CharField(primary_key=True, max_length=40)
+    session_data = models.TextField()
+    expire_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_session'
+
+
+class InvoicingInvoice(models.Model):
+    date_created = models.DateTimeField()
+    due_date = models.DateTimeField()
+    notes = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=20)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=5)  # max_digits and decimal_places have been guessed, as this database handles decimal fields as float
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING, blank=True, null=True)
+    invoice_number = models.CharField(unique=True, max_length=20)
+    payment_method = models.CharField(max_length=20, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'invoicing_invoice'
+
+
+class InvoicingInvoiceitem(models.Model):
+    description = models.CharField(max_length=200)
+    quantity = models.IntegerField()
+    unit_price = models.DecimalField(max_digits=10, decimal_places=5)  # max_digits and decimal_places have been guessed, as this database handles decimal fields as float
+    total_price = models.DecimalField(max_digits=10, decimal_places=5)  # max_digits and decimal_places have been guessed, as this database handles decimal fields as float
+    carwash_service = models.ForeignKey(CarwashCarwashservice, models.DO_NOTHING, blank=True, null=True)
+    invoice = models.ForeignKey(InvoicingInvoice, models.DO_NOTHING)
+    reservation = models.ForeignKey('ParkingReservation', models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'invoicing_invoiceitem'
+
+
+class InvoicingPackage(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    discount_percentage = models.DecimalField(max_digits=10, decimal_places=5)  # max_digits and decimal_places have been guessed, as this database handles decimal fields as float
+    is_active = models.BooleanField()
+
+    class Meta:
+        managed = False
+        db_table = 'invoicing_package'
+
+
+class InvoicingPackageServices(models.Model):
+    package = models.ForeignKey(InvoicingPackage, models.DO_NOTHING)
+    service = models.ForeignKey('InvoicingService', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'invoicing_package_services'
+        unique_together = (('package', 'service'),)
+
+
+class InvoicingService(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=5)  # max_digits and decimal_places have been guessed, as this database handles decimal fields as float
+    estimated_time = models.BigIntegerField()
+    is_active = models.BooleanField()
+    category = models.ForeignKey('InvoicingServicecategory', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'invoicing_service'
+
+
+class InvoicingServicecategory(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    icon = models.CharField(max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'invoicing_servicecategory'
+
+
+class ParkingParkingspace(models.Model):
+    space_number = models.CharField(max_length=10)
+    is_occupied = models.BooleanField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    location = models.ForeignKey(CoreLocation, models.DO_NOTHING)
+    is_disabled_spot = models.BooleanField()
+    hourly_rate = models.DecimalField(max_digits=10, decimal_places=5)  # max_digits and decimal_places have been guessed, as this database handles decimal fields as float
+    daily_rate = models.DecimalField(max_digits=10, decimal_places=5)  # max_digits and decimal_places have been guessed, as this database handles decimal fields as float
+
+    class Meta:
+        managed = False
+        db_table = 'parking_parkingspace'
+
+
+class ParkingReservation(models.Model):
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    total_cost = models.DecimalField(max_digits=10, decimal_places=5)  # max_digits and decimal_places have been guessed, as this database handles decimal fields as float
+    status = models.CharField(max_length=20)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    space = models.ForeignKey(ParkingParkingspace, models.DO_NOTHING)
+    vehicle = models.ForeignKey(CoreVehicle, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'parking_reservation'
+
+
+class PaymentsPayment(models.Model):
+    amount = models.DecimalField(max_digits=10, decimal_places=5)  # max_digits and decimal_places have been guessed, as this database handles decimal fields as float
+    payment_method = models.CharField(max_length=20)
+    status = models.CharField(max_length=20)
+    transaction_id = models.CharField(max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    appointment = models.ForeignKey(CarwashAppointment, models.DO_NOTHING, blank=True, null=True)
+    reservation = models.ForeignKey(ParkingReservation, models.DO_NOTHING, blank=True, null=True)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'payments_payment'
+
+
+class ReportsReport(models.Model):
+    title = models.CharField(max_length=100)
+    report_type = models.CharField(max_length=20)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    content = models.TextField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    created_by = models.ForeignKey(AuthUser, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'reports_report'
+
+
+class UsersRole(models.Model):
+    name = models.CharField(unique=True, max_length=100)
+    description = models.TextField()
+    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'users_role'
+
+
+class UsersRolePermissions(models.Model):
+    role = models.ForeignKey(UsersRole, models.DO_NOTHING)
+    permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'users_role_permissions'
+        unique_together = (('role', 'permission'),)
+
+
+class UsersUserprofile(models.Model):
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    is_verified = models.BooleanField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    user = models.OneToOneField(AuthUser, models.DO_NOTHING)
+    car_brand = models.CharField(max_length=50, blank=True, null=True)
+    car_model = models.CharField(max_length=50, blank=True, null=True)
+    car_photo = models.CharField(max_length=100, blank=True, null=True)
+    license_plate = models.CharField(max_length=10, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'users_userprofile'
+
+
+class UsersUserrole(models.Model):
+    updated_at = models.DateTimeField()
+    role = models.ForeignKey(UsersRole, models.DO_NOTHING, blank=True, null=True)
+    user = models.OneToOneField(AuthUser, models.DO_NOTHING)
+    created_at = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'users_userrole'

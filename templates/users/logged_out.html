@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Sesión Cerrada{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-check-circle text-success fa-4x mb-3"></i>
+                <h2 class="card-title">¡Hasta pronto!</h2>
+                <p class="card-text">Has cerrado sesión exitosamente.</p>
+                <a href="{% url 'login' %}" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Volver a iniciar sesión
+                </a>
+                <a href="{% url 'home' %}" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> Ir al inicio
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

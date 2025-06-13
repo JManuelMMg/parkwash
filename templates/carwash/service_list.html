@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+
+{% block title %}Servicios de Autolavado{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+<div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-primary">Servicios de Autolavado</h2>
+        </div>
+    </div>
+
+    <!-- Formulario principal que contendrá tanto los datos del vehículo como el servicio seleccionado -->
+    <form id="serviceForm" method="POST" action="{% url 'carwash:register_service' %}" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="selected_service" id="selected_service">
+        
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="mb-0">Datos del Vehículo</h5>
+</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Placa</label>
+                        <input type="text" class="form-control" name="plate_number" placeholder="Ingrese la placa" required>
+                        <div class="invalid-feedback">
+                            Por favor ingrese la placa del vehículo
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Modelo</label>
+                        <input type="text" class="form-control" name="model" placeholder="Ingrese el modelo" required>
+                        <div class="invalid-feedback">
+                            Por favor ingrese el modelo del vehículo
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Color</label>
+                        <input type="text" class="form-control" name="color" placeholder="Ingrese el color" required>
+                        <div class="invalid-feedback">
+                            Por favor ingrese el color del vehículo
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Tipo de Vehículo</label>
+                        <select class="form-select" name="vehicle_type" required>
+                            <option value="">Seleccione el tipo de vehículo</option>
+                            <optgroup label="Vehículos Particulares">
+                                <option value="SEDAN">Sedán</option>
+                                <option value="HATCHBACK">Hatchback</option>
+                                <option value="SUV">SUV / Crossover</option>
+                                <option value="PICKUP">Pick-up</option>
+                                <option value="VAN">Van / Minivan</option>
+                            </optgroup>
+                            <optgroup label="Motocicletas">
+                                <option value="MOTO">Motocicleta</option>
+                                <option value="SCOOTER">Scooter</option>
+                            </optgroup>
+                            <optgroup label="Vehículos Comerciales">
+                                <option value="TRUCK_SMALL">Camioneta de Carga</option>
+                                <option value="VAN_CARGO">Van de Carga</option>
+                            </optgroup>
+                        </select>
+                        <div class="invalid-feedback">
+                            Por favor seleccione el tipo de vehículo
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Servicios -->
+        <div class="row justify-content-center" id="flipCardsServices">
+            <!-- Tarjeta: Limpieza Exterior -->
+            <div class="col-md-4 mb-4 d-flex justify-content-center">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front d-flex flex-column align-items-center justify-content-center" style="background: linear-gradient(135deg, #4f8cff 0%, #a6c0fe 100%); color: #fff;">
+                            <i class="fas fa-water fa-3x mb-3"></i>
+                            <h5>Limpieza Exterior</h5>
+                        </div>
+                        <div class="flip-card-back">
+                            <h6 class="text-primary">Lavado Básico</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Inspección de partes, baño y secado general del exterior</li>
+                                <li><i class="fas fa-check text-success"></i> Lavado con agua y jabón</li>
+                                <li><i class="fas fa-check text-success"></i> Enjuague</li>
+                                <li><i class="fas fa-check text-success"></i> Secado con toallas de microfibra</li>
+                                <li><i class="fas fa-check text-success"></i> Limpieza de rines y llantas</li>
+                            </ul>
+                            <div class="text-end">
+                                <span class="badge bg-primary">30 min</span>
+                                <button class="btn btn-primary btn-sm" onclick="reservarServicio('lavado_basico')">RESERVAR</button>
+                            </div>
+                            <hr>
+                            <h6 class="text-primary">Encerado</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Aplicación de cera para proteger la pintura y dar brillo</li>
+                                <li><i class="fas fa-check text-success"></i> Lavado básico</li>
+                                <li><i class="fas fa-check text-success"></i> Aplicación de cera</li>
+                                <li><i class="fas fa-check text-success"></i> Pulido manual</li>
+                                <li><i class="fas fa-check text-success"></i> Protección UV</li>
+                            </ul>
+                            <div class="text-end">
+                                <span class="badge bg-primary">45 min</span>
+                                <button class="btn btn-primary btn-sm" onclick="reservarServicio('encerado')">RESERVAR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tarjeta: Limpieza Interior -->
+            <div class="col-md-4 mb-4 d-flex justify-content-center">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front d-flex flex-column align-items-center justify-content-center" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #fff;">
+                            <i class="fas fa-broom fa-3x mb-3"></i>
+                            <h5>Limpieza Interior</h5>
+                        </div>
+                        <div class="flip-card-back">
+                            <h6 class="text-primary">Aspirado Completo</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Limpieza profunda del interior del vehículo</li>
+                                <li><i class="fas fa-check text-success"></i> Aspirado de asientos</li>
+                                <li><i class="fas fa-check text-success"></i> Limpieza de alfombras</li>
+                                <li><i class="fas fa-check text-success"></i> Limpieza de tablero</li>
+                                <li><i class="fas fa-check text-success"></i> Limpieza de cristales</li>
+                            </ul>
+                            <div class="text-end">
+                                <span class="badge bg-primary">30 min</span>
+                                <button class="btn btn-primary btn-sm" onclick="reservarServicio('aspirado')">RESERVAR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tarjeta: Limpieza de Tapicería -->
+            <div class="col-md-4 mb-4 d-flex justify-content-center">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front d-flex flex-column align-items-center justify-content-center" style="background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); color: #fff;">
+                            <i class="fas fa-couch fa-3x mb-3"></i>
+                            <h5>Limpieza de Tapicería</h5>
+                        </div>
+                        <div class="flip-card-back">
+                            <h6 class="text-primary">Limpieza Profunda</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Limpieza y desinfección completa de asientos</li>
+                                <li><i class="fas fa-check text-success"></i> Limpieza de asientos</li>
+                                <li><i class="fas fa-check text-success"></i> Desinfección</li>
+                                <li><i class="fas fa-check text-success"></i> Tratamiento anti-manchas</li>
+                            </ul>
+                            <div class="text-end">
+                                <span class="badge bg-primary">60 min</span>
+                                <button class="btn btn-primary btn-sm" onclick="reservarServicio('tapiceria')">RESERVAR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tarjeta: Desinfección Total -->
+            <div class="col-md-4 mb-4 d-flex justify-content-center">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front d-flex flex-column align-items-center justify-content-center" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: #fff;">
+                            <i class="fas fa-biohazard fa-3x mb-3"></i>
+                            <h5>Desinfección Total</h5>
+                        </div>
+                        <div class="flip-card-back" style="background: #e0ffe0;">
+                            <h6 class="text-primary">Desinfección con productos certificados</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Eliminación de bacterias y virus</li>
+                                <li><i class="fas fa-check text-success"></i> Aplicación en superficies de contacto</li>
+                            </ul>
+                            <div class="text-end">
+                                <span class="badge bg-primary">20 min</span>
+                                <button class="btn btn-primary btn-sm" onclick="reservarServicio('desinfeccion')">RESERVAR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tarjeta: Pulido de Faros -->
+            <div class="col-md-4 mb-4 d-flex justify-content-center">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front d-flex flex-column align-items-center justify-content-center" style="background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); color: #fff;">
+                            <i class="fas fa-lightbulb fa-3x mb-3"></i>
+                            <h5>Pulido de Faros</h5>
+                        </div>
+                        <div class="flip-card-back" style="background: #fffbe0;">
+                            <h6 class="text-primary">Faros como nuevos</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Eliminación de opacidad</li>
+                                <li><i class="fas fa-check text-success"></i> Mejora la visibilidad nocturna</li>
+                            </ul>
+                            <div class="text-end">
+                                <span class="badge bg-primary">25 min</span>
+                                <button class="btn btn-primary btn-sm" onclick="reservarServicio('faros')">RESERVAR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tarjeta: Lavado de Motor -->
+            <div class="col-md-4 mb-4 d-flex justify-content-center">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front d-flex flex-column align-items-center justify-content-center" style="background: linear-gradient(135deg, #434343 0%, #262626 100%); color: #fff;">
+                            <i class="fas fa-cogs fa-3x mb-3"></i>
+                            <h5>Lavado de Motor</h5>
+                        </div>
+                        <div class="flip-card-back" style="background: #e0e0e0;">
+                            <h6 class="text-primary">Motor limpio y seguro</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Limpieza profesional</li>
+                                <li><i class="fas fa-check text-success"></i> Protección de componentes eléctricos</li>
+                            </ul>
+                            <div class="text-end">
+                                <span class="badge bg-primary">35 min</span>
+                                <button class="btn btn-primary btn-sm" onclick="reservarServicio('motor')">RESERVAR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tarjeta: Aromatización -->
+            <div class="col-md-4 mb-4 d-flex justify-content-center">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front d-flex flex-column align-items-center justify-content-center" style="background: linear-gradient(135deg, #ff6a88 0%, #ff99ac 100%); color: #fff;">
+                            <i class="fas fa-wind fa-3x mb-3"></i>
+                            <h5>Aromatización</h5>
+                        </div>
+                        <div class="flip-card-back" style="background: #fff0f6;">
+                            <h6 class="text-primary">Aromas frescos y duraderos</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Variedad de fragancias</li>
+                                <li><i class="fas fa-check text-success"></i> Ambiente agradable</li>
+                            </ul>
+                            <div class="text-end">
+                                <span class="badge bg-primary">5 min</span>
+                                <button class="btn btn-primary btn-sm" onclick="reservarServicio('aromatizacion')">RESERVAR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .card {
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    .form-control, .form-select {
+        border: 1px solid #e0e0e0;
+        background-color: #ffffff;
+        color: #333333;
+    }
+    .form-control:focus, .form-select:focus {
+        background-color: #ffffff;
+        color: #333333;
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+    }
+    .service-section {
+        border-top: 1px solid #f0f0f0;
+        padding-top: 1rem;
+        background-color: #ffffff;
+    }
+    .service-section:first-child {
+        border-top: none;
+    }
+    .list-unstyled li {
+        margin-bottom: 0.5rem;
+        color: #666666;
+    }
+    .badge {
+        margin-right: 1rem;
+        background-color: #e8f0fe;
+        color: #4a90e2;
+    }
+    .accordion-button {
+        border: none;
+        background-color: #ffffff;
+        color: #333333;
+    }
+    .accordion-button:not(.collapsed) {
+        background-color: #f8f9fa;
+        color: #4a90e2;
+    }
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: #e0e0e0;
+    }
+    .accordion-item {
+        border: 1px solid #e0e0e0;
+        margin-bottom: 5px;
+        background-color: #ffffff;
+    }
+    .btn-primary {
+        background-color: #4a90e2;
+        border-color: #4a90e2;
+        color: #ffffff;
+    }
+    .btn-primary:hover {
+        background-color: #357abd;
+        border-color: #357abd;
+    }
+    .text-primary {
+        color: #4a90e2 !important;
+    }
+    .card-header {
+        border-bottom: 1px solid #e0e0e0;
+        background-color: #f8f9fa;
+    }
+    .container-fluid {
+        padding: 2rem;
+        background-color: #f5f5f5;
+    }
+    h2.text-primary {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: #333333 !important;
+    }
+    .bg-dark {
+        background-color: #ffffff !important;
+    }
+    .text-white {
+        color: #333333 !important;
+    }
+    .fas {
+        color: #4a90e2;
+    }
+    .text-success {
+        color: #28a745 !important;
+    }
+    .flip-card {
+        background-color: transparent;
+        width: 100%;
+        max-width: 340px;
+        height: 420px;
+        perspective: 1000px;
+        margin: 0 auto;
+    }
+    .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+    }
+    .flip-card:hover .flip-card-inner {
+        transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        background: #fff;
+        padding: 2rem 1.2rem 1.2rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .flip-card-front {
+        color: #333;
+        border: 2px solid #e0e0e0;
+    }
+    .flip-card-back {
+        color: #333;
+        border: 2px solid #1976d2;
+        background: #f5faff;
+        transform: rotateY(180deg);
+        overflow-y: auto;
+    }
+    #flipCardsServices .badge {
+        background-color: #e8f0fe;
+        color: #1976d2;
+    }
+    #flipCardsServices .btn-primary {
+        background-color: #1976d2;
+        border-color: #1976d2;
+    }
+    #flipCardsServices .btn-primary:hover {
+        background-color: #145ea8;
+        border-color: #145ea8;
+    }
+</style>
+
+<script>
+function reservarServicio(servicio) {
+    // Establecer el servicio seleccionado en el campo oculto
+    document.getElementById('selected_service').value = servicio;
+    
+    // Obtener el formulario
+    const form = document.getElementById('serviceForm');
+    
+    // Validar el formulario
+    if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+        form.classList.add('was-validated');
+        
+        // Mostrar mensaje al usuario
+        alert('Por favor complete todos los datos del vehículo antes de reservar un servicio.');
+        return;
+    }
+    
+    // Si todo está validado, enviar el formulario
+    form.submit();
+}
+
+// Agregar validación de Bootstrap al formulario
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+})()
+</script>
+{% endblock %} 

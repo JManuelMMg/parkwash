@@ -1,0 +1,460 @@
+/* Variables globales */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --text-color: #2c3e50;
+    --light-bg: #f8f9fa;
+    --dark-bg: #343a40;
+    --success-color: #2ecc71;
+    --warning-color: #f1c40f;
+    --danger-color: #e74c3c;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    --transition: all 0.3s ease;
+}
+
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
+    background-color: var(--light-bg);
+    transition: background-color 0.3s;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: var(--dark-bg);
+    color: #f8f9fa;
+  }
+}
+
+html[data-theme="dark"] body {
+    background-color: var(--dark-bg);
+    color: #f8f9fa;
+}
+
+html[data-theme="light"] body {
+    background-color: var(--light-bg);
+    color: var(--text-color);
+}
+
+/* Navbar mejorado */
+.navbar {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+    box-shadow: var(--box-shadow);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: rgb(255, 255, 255) !important;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+/* Cards y contenedores */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    font-weight: 600;
+}
+
+/* Botones mejorados */
+.btn {
+    border-radius: var(--border-radius);
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Formularios */
+.form-control {
+    border-radius: var(--border-radius);
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Alertas mejoradas */
+.alert {
+    border-radius: var(--border-radius);
+    border: none;
+    box-shadow: var(--box-shadow);
+}
+
+/* Footer mejorado */
+footer {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 3rem 0;
+    margin-top: 4rem;
+}
+
+footer h5 {
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+footer a {
+    color: white;
+    transition: var(--transition);
+}
+
+footer a:hover {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+}
+
+.social-links a {
+    margin-right: 1rem;
+    transition: var(--transition);
+}
+
+.social-links a:hover {
+    transform: translateY(-3px);
+}
+
+/* Tablas mejoradas */
+.table {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+}
+
+.table thead th {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 1rem;
+}
+
+.table tbody tr {
+    transition: var(--transition);
+}
+
+.table tbody tr:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+/* Badges y etiquetas */
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.5rem 0;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    footer {
+        text-align: center;
+    }
+    
+    .social-links {
+        margin-top: 1rem;
+    }
+}
+
+/* Utilidades */
+.shadow-hover {
+    transition: var(--transition);
+}
+
+.shadow-hover:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Mejoras para el dashboard */
+.dashboard-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--box-shadow);
+}
+
+.dashboard-card h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.dashboard-card .icon {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+/* Mejoras para las reservas */
+.reservation-card {
+    border-left: 4px solid var(--secondary-color);
+}
+
+.reservation-card.status-pending {
+    border-left-color: var(--warning-color);
+}
+
+.reservation-card.status-confirmed {
+    border-left-color: var(--success-color);
+}
+
+.reservation-card.status-cancelled {
+    border-left-color: var(--danger-color);
+}
+
+/* Mejoras para el carwash */
+.service-card {
+    text-align: center;
+    padding: 2rem;
+}
+
+.service-card .icon {
+    font-size: 3rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.service-card .price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin: 1rem 0;
+}
+
+/* Mejoras para la facturación */
+.invoice-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 2rem;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.invoice-body {
+    background: white;
+    padding: 2rem;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+/* Mejoras para los reportes */
+.report-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--box-shadow);
+}
+
+.report-card .chart {
+    height: 300px;
+    margin: 1rem 0;
+}
+
+/* Mejoras para el perfil de usuario */
+.profile-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: var(--box-shadow);
+}
+
+.profile-info {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--box-shadow);
+}
+
+/* Modo oscuro mejorado */
+body.dark-theme {
+    background-color: #181a1b !important;
+    color: #f1f1f1 !important;
+}
+
+.dark-theme .navbar, .dark-theme footer {
+    background: linear-gradient(90deg, #181a1b 0%, #232526 100%) !important;
+    color: #f1f1f1 !important;
+}
+
+.dark-theme .card, .dark-theme .dashboard-card, .dark-theme .service-card {
+    background: #232526 !important;
+    color: #f1f1f1 !important;
+    border-color: #333 !important;
+}
+
+.dark-theme .card-header, .dark-theme .invoice-header {
+    background: #232526 !important;
+    color: #f1f1f1 !important;
+}
+
+.dark-theme .table {
+    background: #232526 !important;
+    color: #f1f1f1 !important;
+}
+.dark-theme .table thead th {
+    background-color: #232526 !important;
+    color: #fff !important;
+}
+.dark-theme .table tbody tr {
+    background-color: #232526 !important;
+    color: #f1f1f1 !important;
+}
+.dark-theme .table tbody tr:hover {
+    background-color: #232526 !important;
+    color: #fff !important;
+}
+
+.dark-theme .nav-link, .dark-theme .navbar-brand {
+    color: #f1f1f1 !important;
+}
+.dark-theme .dropdown-menu {
+    background: #232526 !important;
+    color: #f1f1f1 !important;
+}
+.dark-theme .dropdown-item {
+    color: #f1f1f1 !important;
+}
+.dark-theme .dropdown-item:hover {
+    background: #333 !important;
+    color: #fff !important;
+}
+.dark-theme .btn-primary {
+    background: linear-gradient(135deg, #232526, #414345) !important;
+    color: #fff !important;
+    border: none;
+}
+.dark-theme .btn-primary:hover {
+    background: linear-gradient(135deg, #414345, #232526) !important;
+    color: #fff !important;
+}
+.dark-theme .alert {
+    background: #232526 !important;
+    color: #fff !important;
+}
+.dark-theme .badge {
+    background: #414345 !important;
+    color: #fff !important;
+}
+.dark-theme .form-control {
+    background: #232526 !important;
+    color: #f1f1f1 !important;
+    border-color: #333 !important;
+}
+.dark-theme .form-control:focus {
+    border-color: #64b5f6 !important;
+    box-shadow: 0 0 0 0.2rem rgba(100,181,246,0.25) !important;
+}
+.dark-theme .text-gradient {
+    background: linear-gradient(135deg, #64b5f6, #1976d2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Mejor contraste para tablas en modo claro */
+body.light-theme .table thead th {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+body.light-theme .table tbody tr:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+/* Mejoras visuales generales */
+.card, .dashboard-card, .service-card {
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+}
+
+.table {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+}
+
+.btn-primary {
+    font-size: 1.1rem;
+    padding: 0.6rem 2rem;
+    letter-spacing: 0.5px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+p, .lead {
+    font-size: 1.1rem;
+    line-height: 1.7;
+} 

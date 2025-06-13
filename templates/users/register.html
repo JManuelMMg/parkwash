@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Registro de Usuario{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-hover fade-in">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title mb-0">
+                        <i class="fas fa-user-plus"></i> Registro de Usuario
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Por favor, corrija los siguientes errores:
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card dashboard-card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="text-gradient mb-4">Información Personal</h5>
+                                        {{ form.username|as_crispy_field }}
+                                        {{ form.first_name|as_crispy_field }}
+                                        {{ form.last_name|as_crispy_field }}
+                                        {{ form.maternal_lastname|as_crispy_field }}
+                                        {{ form.email|as_crispy_field }}
+                                        {{ form.phone_number|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card dashboard-card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="text-gradient mb-4">Información del Vehículo</h5>
+                                        {{ form.car_brand|as_crispy_field }}
+                                        {{ form.car_model|as_crispy_field }}
+                                        {{ form.license_plate|as_crispy_field }}
+                                        {{ form.car_photo|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="card dashboard-card">
+                                    <div class="card-body">
+                                        <h5 class="text-gradient mb-4">Contraseña</h5>
+                                        {{ form.password1|as_crispy_field }}
+                                        {{ form.password2|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus"></i> Registrarse
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-0">¿Ya tienes una cuenta? <a href="{% url 'users:login' %}" class="text-primary">Inicia Sesión</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Preview de la imagen del vehículo
+    document.getElementById('id_car_photo').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.createElement('img');
+                preview.src = e.target.result;
+                preview.style.maxWidth = '100%';
+                preview.style.marginTop = '10px';
+                preview.className = 'img-thumbnail shadow-hover';
+                
+                const container = document.getElementById('id_car_photo').parentElement;
+                const oldPreview = container.querySelector('img');
+                if (oldPreview) {
+                    container.removeChild(oldPreview);
+                }
+                container.appendChild(preview);
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+{% endblock %} 

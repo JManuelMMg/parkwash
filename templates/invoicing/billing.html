@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}Facturación - Park & Wash{% endblock %}
+
+{% block extra_css %}
+<style>
+    .service-card {
+        transition: transform 0.2s;
+    }
+    .service-card:hover {
+        transform: translateY(-5px);
+    }
+    .package-card {
+        border: 2px solid #007bff;
+    }
+    .package-card .discount-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Facturación</h1>
+    
+    <form method="post" id="billingForm">
+        {% csrf_token %}
+        
+        <!-- Client Information -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Información del Cliente</h5>
+                <div class="mb-3">
+                    <label for="client_name" class="form-label">Nombre del Cliente (opcional)</label>
+                    <input type="text" class="form-control" id="client_name" name="client_name">
+                </div>
+            </div>
+        </div>
+
+        <!-- Services by Category -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Servicios Disponibles</h5>
+                {% for category in categories %}
+                <div class="mb-4">
+                    <h6 class="mb-3">
+                        <i class="{{ category.icon }}"></i> {{ category.name }}
+                    </h6>
+                    <div class="row">
+                        {% for service in category.services.all %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card service-card h-100">
+                                <div class="card-body">
+                                    <div class="form-check">
+                                        <input class="form-check-input service-checkbox" type="checkbox" 
+                                               name="services" value="{{ service.id }}" 
+                                               id="service_{{ service.id }}">
+                                        <label class="form-check-label" for="service_{{ service.id }}">
+                                            <h6 class="card-title">{{ service.name }}</h6>
+                                        </label>
+                                    </div>
+                                    <p class="card-text small">{{ service.description }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="text-primary fw-bold">${{ service.price }}</span>
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock"></i> {{ service.estimated_time }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Packages -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Paquetes Promocionales</h5>
+                <div class="row">
+                    {% for package in packages %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card package-card h-100">
+                            {% if package.discount_percentage > 0 %}
+                            <div class="discount-badge">
+                                <span class="badge bg-danger">
+                                    -{{ package.discount_percentage }}%
+                                </span>
+                            </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <div class="form-check">
+                                    <input class="form-check-input package-checkbox" type="checkbox" 
+                                           name="packages" value="{{ package.id }}" 
+                                           id="package_{{ package.id }}">
+                                    <label class="form-check-label" for="package_{{ package.id }}">
+                                        <h6 class="card-title">{{ package.name }}</h6>
+                                    </label>
+                                </div>
+                                <p class="card-text small">{{ package.description }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="text-primary fw-bold">${{ package.discounted_price }}</span>
+                                        {% if package.discount_percentage > 0 %}
+                                        <small class="text-muted text-decoration-line-through">
+                                            ${{ package.original_price }}
+                                        </small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Método de Pago</h5>
+                <div class="mb-3">
+                    <select class="form-select" id="payment_method" name="payment_method" required>
+                        <option value="">Seleccione un método de pago</option>
+                        <option value="cash">Efectivo</option>
+                        <option value="card">Tarjeta</option>
+                        <option value="transfer">Transferencia</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Option -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="send_email" name="send_email">
+                    <label class="form-check-label" for="send_email">
+                        Enviar factura por correo electrónico
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-file-invoice"></i> Generar Factura
+            </button>
+        </div>
+    </form>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('billingForm');
+    const serviceCheckboxes = document.querySelectorAll('.service-checkbox');
+    const packageCheckboxes = document.querySelectorAll('.package-checkbox');
+
+    // Prevent form submission if no services or packages are selected
+    form.addEventListener('submit', function(e) {
+        const hasSelectedServices = Array.from(serviceCheckboxes).some(cb => cb.checked);
+        const hasSelectedPackages = Array.from(packageCheckboxes).some(cb => cb.checked);
+        
+        if (!hasSelectedServices && !hasSelectedPackages) {
+            e.preventDefault();
+            alert('Por favor seleccione al menos un servicio o paquete');
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 

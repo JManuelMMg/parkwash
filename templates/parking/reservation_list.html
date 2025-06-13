@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Reservas{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1 class="display-4">Mis Reservas</h1>
+        <p class="lead">Gestiona tus reservas de estacionamiento</p>
+    </div>
+</div>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <button class="btn btn-success mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#formReserva">
+            <i class="fas fa-plus"></i> Nueva Reserva
+        </button>
+        <a href="{% url 'parking:delete_all_reservations' %}" class="btn btn-danger mb-3" onclick="return confirm('¿Eliminar todas las reservas?');">
+            <i class="fas fa-trash"></i> Eliminar Todas
+        </a>
+        <div class="collapse" id="formReserva">
+            <h2 class="text-primary"><i class="fas fa-calendar-check"></i> Nueva Reserva</h2>
+            <form method="post" action="{% url 'parking:create_reservation' %}" class="mb-4" style="background: #f8f9fa; border-radius: 8px; padding: 20px;">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="fecha"><i class="fas fa-calendar-alt"></i> Fecha</label>
+                        <input type="date" class="form-control" id="fecha" name="fecha" required>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="hora"><i class="fas fa-clock"></i> Hora</label>
+                        <input type="time" class="form-control" id="hora" name="hora" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="servicio"><i class="fas fa-cogs"></i> Servicio</label>
+                        <select class="form-control" id="servicio" name="servicio" required onchange="toggleSpaceSelect()">
+                            <option value="">Selecciona un servicio</option>
+                            <option value="estacionamiento">Estacionamiento</option>
+                            <option value="autolavado">Autolavado</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3" id="space-select-div">
+                        <label for="espacio"><i class="fas fa-parking"></i> Espacio</label>
+                        <select class="form-control" id="espacio" name="espacio">
+                            <option value="">Selecciona un espacio</option>
+                            {% for space in spaces %}
+                                <option value="{{ space.id }}" {% if space.is_occupied %}disabled{% endif %}>
+                                    {{ space.location.name }} - {{ space.space_number }} {% if space.is_occupied %}(Ocupado){% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-plus"></i> Reservar</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="placa"><i class="fas fa-id-card"></i> Placa</label>
+                        <input type="text" class="form-control" id="placa" name="placa" placeholder="Ej: ABC123" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="modelo"><i class="fas fa-car-side"></i> Modelo</label>
+                        <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ej: Corolla 2020" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="color"><i class="fas fa-palette"></i> Color</label>
+                        <input type="text" class="form-control" id="color" name="color" placeholder="Ej: Rojo" required>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Espacio</th>
+                                <th>Ubicación</th>
+                                <th>Inicio</th>
+                                <th>Fin</th>
+                                <th>Costo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reservation in reservations %}
+                            <tr>
+                                <td>{{ reservation.space.space_number }}</td>
+                                <td>{{ reservation.space.location.name }}</td>
+                                <td>{{ reservation.start_time|date:"d/m/Y H:i" }}</td>
+                                <td>{{ reservation.end_time|date:"d/m/Y H:i" }}</td>
+                                <td>${{ reservation.total_cost }}</td>
+                                <td>
+                                    {% if reservation.status == 'PENDING' %}
+                                    <span class="badge bg-warning">Pendiente</span>
+                                    {% elif reservation.status == 'ACTIVE' %}
+                                    <span class="badge bg-success">Activa</span>
+                                    {% elif reservation.status == 'COMPLETED' %}
+                                    <span class="badge bg-info">Completada</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Cancelada</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'parking:reservation_detail' reservation.pk %}" 
+                                           class="btn btn-sm btn-info" title="Ver detalles">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if reservation.status == 'PENDING' or reservation.status == 'ACTIVE' %}
+                                        <a href="{% url 'parking:reservation_cancel' reservation.pk %}" 
+                                           class="btn btn-sm btn-warning" title="Cancelar reserva">
+                                            <i class="fas fa-ban"></i>
+                                        </a>
+                                        {% endif %}
+                                        <a href="{% url 'parking:reservation_delete' reservation.pk %}" 
+                                           class="btn btn-sm btn-danger" title="Eliminar" onclick="return confirm('¿Eliminar esta reserva?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i> No tienes reservas activas.
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle text-info"></i> Información Importante
+                </h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-clock text-primary"></i> Las reservas pueden ser canceladas hasta 2 horas antes del inicio</li>
+                    <li><i class="fas fa-money-bill-wave text-success"></i> Los pagos se realizan al momento de la reserva</li>
+                    <li><i class="fas fa-exclamation-triangle text-warning"></i> Las reservas no utilizadas no son reembolsables</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleSpaceSelect() {
+    var servicio = document.getElementById('servicio').value;
+    var spaceDiv = document.getElementById('space-select-div');
+    var espacio = document.getElementById('espacio');
+    if (servicio === 'autolavado') {
+        spaceDiv.style.display = 'none';
+        espacio.removeAttribute('required');
+    } else {
+        spaceDiv.style.display = '';
+        espacio.setAttribute('required', 'required');
+    }
+}
+window.onload = toggleSpaceSelect;
+</script>
+{% endblock %} 

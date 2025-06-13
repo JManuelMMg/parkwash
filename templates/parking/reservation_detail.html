@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalles de la Reserva{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1 class="display-4">Detalles de la Reserva</h1>
+        <p class="lead">Información detallada de tu reserva</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle text-primary"></i> Información de la Reserva
+                </h5>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>Espacio:</th>
+                                <td>{{ reservation.space.space_number }}</td>
+                            </tr>
+                            <tr>
+                                <th>Ubicación:</th>
+                                <td>{{ reservation.space.location.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Dirección:</th>
+                                <td>{{ reservation.space.location.address }}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha de Inicio:</th>
+                                <td>{{ reservation.start_time|date:"d/m/Y H:i" }}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha de Fin:</th>
+                                <td>{{ reservation.end_time|date:"d/m/Y H:i" }}</td>
+                            </tr>
+                            <tr>
+                                <th>Duración:</th>
+                                <td>{{ reservation.end_time|timeuntil:reservation.start_time }}</td>
+                            </tr>
+                            <tr>
+                                <th>Costo Total:</th>
+                                <td>${{ reservation.total_cost }}</td>
+                            </tr>
+                            <tr>
+                                <th>Estado:</th>
+                                <td>
+                                    {% if reservation.status == 'PENDING' %}
+                                    <span class="badge bg-warning">Pendiente</span>
+                                    {% elif reservation.status == 'ACTIVE' %}
+                                    <span class="badge bg-success">Activa</span>
+                                    {% elif reservation.status == 'COMPLETED' %}
+                                    <span class="badge bg-info">Completada</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Cancelada</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-map-marker-alt text-success"></i> Ubicación
+                </h5>
+                <div class="embed-responsive embed-responsive-16by9">
+                    <!-- Aquí iría el mapa de Google Maps o similar -->
+                    <div class="alert alert-info">
+                        <i class="fas fa-map"></i> Mapa de ubicación
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-cog text-primary"></i> Acciones
+                </h5>
+                {% if reservation.status == 'PENDING' or reservation.status == 'ACTIVE' %}
+                <div class="d-grid gap-2">
+                    <a href="{% url 'parking:reservation_cancel' reservation.pk %}" 
+                       class="btn btn-danger">
+                        <i class="fas fa-times"></i> Cancelar Reserva
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle text-info"></i> Información Importante
+                </h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-clock text-primary"></i> Las reservas pueden ser canceladas hasta 2 horas antes del inicio</li>
+                    <li><i class="fas fa-money-bill-wave text-success"></i> Los pagos se realizan al momento de la reserva</li>
+                    <li><i class="fas fa-exclamation-triangle text-warning"></i> Las reservas no utilizadas no son reembolsables</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: park_app
+    container_name: park_app
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./staticfiles:/app/staticfiles
+      - ./media:/app/media
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - park_network
+
+  db:
+    image: postgres:13
+    container_name: park_db
+    restart: always
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - park_network
+
+networks:
+  park_network:
+    driver: bridge
+
+volumes:
+  postgres_data: 

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Reportes{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Reportes</h1>
+    <p>Esta es la página de reportes. Personalízala según los datos que quieras mostrar.</p>
+    {% if object_list %}
+        <ul>
+        {% for report in object_list %}
+            <li>{{ report }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-info">No hay reportes disponibles.</div>
+    {% endif %}
+</div>
+{% endblock %} 

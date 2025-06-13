@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Perfil{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title mb-0">
+                        <i class="fas fa-user-circle"></i> Mi Perfil
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Información Personal</h5>
+                            <p><strong><i class="fas fa-user"></i> Nombre:</strong> {{ user.get_full_name }}</p>
+                            <p><strong><i class="fas fa-envelope"></i> Email:</strong> {{ user.email }}</p>
+                            <p><strong><i class="fas fa-phone"></i> Teléfono:</strong> {{ profile.phone_number }}</p>
+                            {% if profile.address %}
+                            <p><strong><i class="fas fa-map-marker-alt"></i> Dirección:</strong> {{ profile.address }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Información del Vehículo</h5>
+                            {% if profile.car_brand %}
+                            <p><strong><i class="fas fa-car"></i> Marca:</strong> {{ profile.car_brand }}</p>
+                            <p><strong><i class="fas fa-car"></i> Modelo:</strong> {{ profile.car_model }}</p>
+                            <p><strong><i class="fas fa-hashtag"></i> Placas:</strong> {{ profile.license_plate }}</p>
+                            {% if profile.car_photo %}
+                            <div class="mb-3">
+                                <img src="{{ profile.car_photo.url }}" alt="Foto del vehículo" class="img-fluid rounded">
+                            </div>
+                            {% endif %}
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> No has registrado información de tu vehículo.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'users:edit_profile' %}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Editar Perfil
+                        </a>
+                        <a href="{% url 'password_change' %}" class="btn btn-secondary">
+                            <i class="fas fa-key"></i> Cambiar Contraseña
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {% if user.is_staff %}
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h4 class="card-title mb-0">
+                        <i class="fas fa-shield-alt"></i> Acceso Administrativo
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <p>Tienes acceso al panel de administración.</p>
+                    <a href="{% url 'admin:index' %}" class="btn btn-info">
+                        <i class="fas fa-cog"></i> Panel de Administración
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

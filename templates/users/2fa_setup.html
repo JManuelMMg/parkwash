@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Configurar Autenticación de Dos Factores{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-shield-alt"></i> Configurar Autenticación de Dos Factores
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        Para configurar la autenticación de dos factores, sigue estos pasos:
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>1. Escanea el código QR</h5>
+                        <p>Usa una aplicación de autenticación como Google Authenticator o Authy para escanear este código QR:</p>
+                        <div class="text-center mb-3">
+                            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="img-fluid" style="max-width: 200px;">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>2. Clave Secreta</h5>
+                        <p>Si no puedes escanear el código QR, puedes ingresar manualmente esta clave secreta en tu aplicación:</p>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" value="{{ secret_key }}" readonly>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('{{ secret_key }}')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>3. Códigos de Respaldo</h5>
+                        <p>Guarda estos códigos de respaldo en un lugar seguro. Los necesitarás si pierdes acceso a tu dispositivo:</p>
+                        <div class="alert alert-warning">
+                            {% for code in backup_codes %}
+                                <code>{{ code }}</code><br>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>4. Verificar Configuración</h5>
+                        <p>Ingresa el código de 6 dígitos que muestra tu aplicación de autenticación:</p>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input type="text" name="code" class="form-control" placeholder="Código de 6 dígitos" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check"></i> Verificar y Activar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        alert('Clave copiada al portapapeles');
+    }).catch(function(err) {
+        console.error('Error al copiar: ', err);
+    });
+}
+</script>
+{% endblock %} 

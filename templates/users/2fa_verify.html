@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Verificar Autenticación de Dos Factores{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-shield-alt"></i> Verificación de Dos Factores
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        Por favor, ingresa el código de 6 dígitos de tu aplicación de autenticación.
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="code">Código de Verificación</label>
+                            <input type="text" name="code" id="code" class="form-control" 
+                                   placeholder="Ingresa el código de 6 dígitos" required
+                                   pattern="[0-9]{6}" maxlength="6">
+                            <small class="form-text text-muted">
+                                Si no tienes acceso a tu dispositivo, puedes usar un código de respaldo.
+                            </small>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check"></i> Verificar
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="mt-4">
+                        <h5>¿Problemas con la autenticación?</h5>
+                        <p>Si estás teniendo problemas para acceder a tu cuenta:</p>
+                        <ul>
+                            <li>Asegúrate de que la hora de tu dispositivo esté sincronizada correctamente</li>
+                            <li>Verifica que estás usando el código más reciente de tu aplicación</li>
+                            <li>Si has perdido acceso a tu dispositivo, contacta al administrador del sistema</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('code').addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+</script>
+{% endblock %} 

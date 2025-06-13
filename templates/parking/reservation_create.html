@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Crear Reserva{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1 class="display-4">Crear Reserva</h1>
+        <p class="lead">Completa los siguientes datos para realizar tu reserva</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-calendar-plus text-primary"></i> Detalles de la Reserva
+                </h5>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-check"></i> Confirmar Reserva
+                        </button>
+                        <a href="{% url 'parking:detail' space.pk %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle text-info"></i> Información del Espacio
+                </h5>
+                <ul class="list-unstyled">
+                    <li><strong>Número:</strong> {{ space.space_number }}</li>
+                    <li><strong>Ubicación:</strong> {{ space.location.name }}</li>
+                    <li><strong>Dirección:</strong> {{ space.location.address }}</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-exclamation-triangle text-warning"></i> Términos y Condiciones
+                </h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-clock text-primary"></i> La reserva tiene una duración mínima de 1 hora</li>
+                    <li><i class="fas fa-money-bill-wave text-success"></i> Tarifa por hora: $20.00</li>
+                    <li><i class="fas fa-ban text-danger"></i> No se permiten cancelaciones dentro de las 2 horas previas a la reserva</li>
+                    <li><i class="fas fa-shield-alt text-info"></i> El espacio está vigilado 24/7</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Inicializar el datetime picker para los campos de fecha y hora
+        $('#id_start_time').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm',
+            minDate: moment()
+        });
+        $('#id_end_time').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm',
+            minDate: moment()
+        });
+    });
+</script>
+{% endblock %} 

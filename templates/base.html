@@ -1,0 +1,332 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Park & Wash{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    
+    <style>
+        body.light-theme {
+            background: linear-gradient(135deg, #f8fafc 0%, #e3f0ff 100%) !important;
+            color: #222 !important;
+        }
+        body.dark-theme {
+            background: linear-gradient(135deg, #181a1b 0%, #232526 100%) !important;
+            color: #f1f1f1 !important;
+        }
+        .navbar, .footer {
+            transition: background 0.3s;
+        }
+        .light-theme .navbar, .light-theme .footer {
+            background: linear-gradient(90deg, #1976d2 0%, #64b5f6 100%) !important;
+            text-color: #fff !important;
+            color: #fff !important;
+        }
+        .dark-theme .navbar, .dark-theme .footer {
+            background: linear-gradient(90deg, #181a1b 0%, #232526 100%) !important;
+            color: #f1f1f1 !important;
+        }
+        .dark-theme .card, .dark-theme .status-info, .dark-theme .parking-space {
+            background: #232526 !important;
+            color: #f1f1f1 !important;
+            border-color: #333 !important;
+        }
+        .dark-theme .card-header, .dark-theme .table, .dark-theme .dashboard-card {
+            background: #232526 !important;
+            color: #f1f1f1 !important;
+        }
+        .dark-theme .table thead th {
+            background-color: #232526 !important;
+            color: #fff !important;
+        }
+        .dark-theme .table tbody tr:hover {
+            background-color: #232526 !important;
+        }
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+        .dark-theme .status-indicator {
+            color: #fff !important;
+            font-weight: 600;
+        }
+        .dark-theme .status-indicator i,
+        .dark-theme .status-indicator .bg-success,
+        .dark-theme .status-indicator .bg-danger,
+        .dark-theme .status-indicator .text-primary,
+        .dark-theme .status-indicator .text-success,
+        .dark-theme .status-indicator .text-warning {
+            color: #fff !important;
+        }
+        .dark-theme .nav-link, .dark-theme .navbar-brand {
+            color: #f1f1f1 !important;
+        }
+        .dark-theme .dropdown-menu {
+            background: #232526 !important;
+            color: #f1f1f1 !important;
+        }
+        .dark-theme .dropdown-item {
+            color: #f1f1f1 !important;
+        }
+        .dark-theme .dropdown-item:hover {
+            background: #333 !important;
+            color: #fff !important;
+        }
+        .dark-theme .btn-primary {
+            background: linear-gradient(135deg, #232526, #414345) !important;
+            color: #fff !important;
+        }
+        .dark-theme .btn-primary:hover {
+            background: linear-gradient(135deg, #414345, #232526) !important;
+            color: #fff !important;
+        }
+        .dark-theme .alert {
+            background: #232526 !important;
+            color: #fff !important;
+        }
+        .dark-theme .badge {
+            background: #414345 !important;
+            color: #fff !important;
+        }
+        .dark-theme .form-control {
+            background: #232526 !important;
+            color: #f1f1f1 !important;
+            border-color: #333 !important;
+        }
+        .dark-theme .form-control:focus {
+            border-color: #64b5f6 !important;
+            box-shadow: 0 0 0 0.2rem rgba(100,181,246,0.25) !important;
+        }
+        .dark-theme .text-gradient {
+            background: linear-gradient(135deg, #64b5f6, #1976d2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-30px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .notification-fade-in {
+            animation: fadeInDown 0.7s cubic-bezier(.39,.575,.565,1.000) both;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            box-shadow: 0 8px 32px rgba(44,62,80,0.18);
+            background: rgba(255,255,255,0.95);
+        }
+        .alert-success.notification-fade-in {
+            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%) !important;
+            color: #222;
+        }
+        .alert-danger.notification-fade-in {
+            background: linear-gradient(90deg, #ff5858 0%, #f09819 100%) !important;
+            color: #fff;
+        }
+        .alert-info.notification-fade-in {
+            background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%) !important;
+            color: #fff;
+        }
+        .alert-warning.notification-fade-in {
+            background: linear-gradient(90deg, #f7971e 0%, #ffd200 100%) !important;
+            color: #222;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="light-theme">
+    <script>
+    // Tema claro/oscuro con preferencia guardada y soporte de sistema
+    function setTheme(theme) {
+        document.body.classList.remove('light-theme', 'dark-theme');
+        document.body.classList.add(theme);
+        localStorage.setItem('theme', theme);
+        document.getElementById('themeIcon').className = theme === 'dark-theme' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const saved = localStorage.getItem('theme');
+        if (saved) {
+            setTheme(saved);
+        } else {
+            // Detectar preferencia del sistema
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                setTheme('dark-theme');
+            } else {
+                setTheme('light-theme');
+            }
+        }
+        document.getElementById('themeToggleBtn').onclick = function() {
+            const current = document.body.classList.contains('dark-theme') ? 'dark-theme' : 'light-theme';
+            setTheme(current === 'dark-theme' ? 'light-theme' : 'dark-theme');
+        };
+    });
+    </script>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'img/imagen_2025-06-01_210212147-removebg-preview.png' %}" alt="ISFAJ Logo" style="height: 120px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'parking:list' %}">
+                            <img src="{% static 'img/estacionamiento.gif' %}"  style="height: 50px;"></i> Estacionamiento
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'carwash:services' %}">
+                            <img src="{% static 'img/lavado.gif' %}"  style="height: 50px;"></i> Autolavado
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'parking:my_reservations' %}">
+                            <img src="{% static 'img/reserva.gif' %}"  style="height: 50px;"></i> Mis Reservas
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'reports:list' %}">
+                            <img src="{% static 'img/presupuesto.gif' %}"  style="height: 50px;"></i> Reportes
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'invoicing:invoice_list' %}">
+                            <img src="{% static 'img/factura.gif' %}"  style="height: 50px;"></i> Facturación
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
+                           data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'users:profile' %}">
+                                    <i class="fas fa-id-card"></i> Mi Perfil
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'password_change' %}">
+                                    <i class="fas fa-key"></i> Cambiar Contraseña
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}" class="dropdown-item p-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link text-decoration-none w-100 text-start px-3">
+                                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <button id="themeToggleBtn" class="theme-toggle-btn" title="Cambiar tema">
+                            <i id="themeIcon" class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">
+                            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:register' %}">
+                            <i class="fas fa-user-plus"></i> Registrarse
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 2000; max-width: 500px;">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-lg notification-fade-in mb-2" role="alert" style="animation: fadeInDown 0.7s;">
+            <i class="fas fa-bell me-2"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+    setTimeout(function() {
+        var alerts = document.querySelectorAll('.alert-dismissible');
+        alerts.forEach(function(alert) {
+            if (alert.classList.contains('show')) {
+                var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                bsAlert.close();
+            }
+        });
+    }, 5000);
+    </script>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Park & Wash</h5>
+                    <p>Tu solución integral para estacionamiento y lavado de autos.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contacto</h5>
+                    <p>
+                        <i class="fas fa-phone"></i> +123 456 7890<br>
+                        <i class="fas fa-envelope"></i> Contactoisfaj@gmail.com<br>
+                        <i class="fas fa-map-marker-alt"></i> C. Benito Juárez 13, 50640 Ejido de San Juan Jalpa, Méx.
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Síguenos</h5>
+                    <div class="social-links">
+                        <a href="#" class="text-dark me-2"><i class="fab fa-facebook fa-2x"></i></a>
+                        <a href="#" class="text-dark me-2"><i class="fab fa-twitter fa-2x"></i></a>
+                        <a href="#" class="text-dark me-2"><i class="fab fa-instagram fa-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <small>&copy; {% now "Y" %} Park & Wash. Todos los derechos reservados.</small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

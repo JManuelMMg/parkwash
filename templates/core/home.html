@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12 text-center">
+            <h1 class="display-4">{{ title }}</h1>
+            <p class="lead">Tu solución integral para estacionamiento y lavado de autos</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-car-side fa-4x text-primary mb-3"></i>
+                    <h3>Estacionamiento</h3>
+                    <p>Encuentra y reserva espacios de estacionamiento de manera fácil y segura.</p>
+                    <a href="{% url 'parking:list' %}" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Buscar Espacios
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-shower fa-4x text-success mb-3"></i>
+                    <h3>Autolavado</h3>
+                    <p>Agenda un servicio de lavado profesional para tu vehículo.</p>
+                    <a href="{% url 'carwash:services' %}" class="btn btn-success">
+                        <i class="fas fa-calendar-alt"></i> Ver Servicios
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-shield-alt fa-3x text-info mb-3"></i>
+                    <h4>Seguridad Garantizada</h4>
+                    <p>Vigilancia 24/7 y personal capacitado para cuidar tu vehículo.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-3x text-warning mb-3"></i>
+                    <h4>Servicio 24/7</h4>
+                    <p>Disponibilidad total para adaptarnos a tu horario.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-star fa-3x text-danger mb-3"></i>
+                    <h4>Calidad Premium</h4>
+                    <p>Los mejores servicios y atención personalizada.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if not user.is_authenticated %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h3>¿Aún no tienes una cuenta?</h3>
+                    <p>Regístrate para acceder a todos nuestros servicios y beneficios exclusivos.</p>
+                    <a href="{% url 'users:register' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus"></i> Crear Cuenta
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

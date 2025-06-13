@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .invoice-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        .totals {
+            text-align: right;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 12px;
+            color: rgba(254, 254, 254, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Park & Wash</h1>
+        <p>Tu solución integral para estacionamiento y lavado de autos</p>
+    </div>
+
+    <div class="invoice-details">
+        <h2>Factura #{{ invoice.invoice_number }}</h2>
+        <p>Fecha: {{ invoice.created_at|date:"d/m/Y H:i" }}</p>
+        {% if invoice.client %}
+            <p>Cliente: {{ invoice.client.get_full_name|default:invoice.client.username }}</p>
+            <p>Email: {{ invoice.client.email }}</p>
+        {% elif invoice.client_name %}
+            <p>Cliente: {{ invoice.client_name }}</p>
+        {% endif %}
+        <p>Método de Pago: {{ invoice.get_payment_method_display }}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>{{ service.name }}</td>
+                <td>${{ service.price }}</td>
+            </tr>
+            {% endfor %}
+            {% for package in packages %}
+            <tr>
+                <td>
+                    {{ package.name }}
+                    {% if package.discount_percentage > 0 %}
+                    (-{{ package.discount_percentage }}%)
+                    {% endif %}
+                </td>
+                <td>${{ package.discounted_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="totals">
+        <p><strong>Subtotal:</strong> ${{ invoice.subtotal }}</p>
+        <p><strong>IVA (16%):</strong> ${{ invoice.tax }}</p>
+        <p><strong>Total:</strong> ${{ invoice.total }}</p>
+    </div>
+
+    <div class="footer">
+        <p>Gracias por su preferencia</p>
+        <p>Park & Wash - Todos los derechos reservados</p>
+    </div>
+</body>
+</html> 

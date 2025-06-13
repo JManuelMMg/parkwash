@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Agendar Cita de Autolavado{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1 class="display-4">Agendar Cita de Autolavado</h1>
+        <p class="lead">Completa los siguientes datos para agendar tu cita</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-calendar-plus text-primary"></i> Detalles de la Cita
+                </h5>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-check"></i> Confirmar Cita
+                        </button>
+                        <a href="{% url 'carwash:services' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        {% if service %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle text-info"></i> Servicio Seleccionado
+                </h5>
+                <h6>{{ service.name }}</h6>
+                <p>{{ service.description }}</p>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-clock text-info"></i> Duración: {{ service.duration }} minutos</li>
+                    <li><i class="fas fa-money-bill-wave text-success"></i> Precio: ${{ service.price }}</li>
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle text-info"></i> Información Importante
+                </h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fas fa-clock text-primary"></i>
+                        <strong>Horario de Atención:</strong><br>
+                        Lunes a Sábado: 8:00 AM - 6:00 PM<br>
+                        Domingo: 9:00 AM - 2:00 PM
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                        <strong>Política de Cancelación:</strong><br>
+                        Puedes cancelar hasta 2 horas antes de tu cita
+                    </li>
+                    <li>
+                        <i class="fas fa-shield-alt text-success"></i>
+                        <strong>Garantía:</strong><br>
+                        100% satisfacción garantizada
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Inicializar el datetime picker para el campo de fecha y hora
+        $('#id_appointment_time').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm',
+            minDate: moment(),
+            daysOfWeekDisabled: [0],
+            disabledHours: [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23],
+            stepping: 30
+        });
+    });
+</script>
+{% endblock %} 

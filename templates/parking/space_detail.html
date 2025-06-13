@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalles del Espacio {{ space.space_number }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1 class="display-4">Espacio {{ space.space_number }}</h1>
+        <p class="lead">Ubicación: {{ space.location.name }}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle text-primary"></i> Información del Espacio
+                </h5>
+                <ul class="list-unstyled">
+                    <li><strong>Número:</strong> {{ space.space_number }}</li>
+                    <li><strong>Ubicación:</strong> {{ space.location.name }}</li>
+                    <li><strong>Dirección:</strong> {{ space.location.address }}</li>
+                    <li><strong>Estado:</strong> 
+                        {% if space.is_occupied %}
+                        <span class="badge bg-danger">Ocupado</span>
+                        {% else %}
+                        <span class="badge bg-success">Disponible</span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-map-marker-alt text-success"></i> Ubicación
+                </h5>
+                <div class="embed-responsive embed-responsive-16by9">
+                    <!-- Aquí iría el mapa de Google Maps o similar -->
+                    <div class="alert alert-info">
+                        <i class="fas fa-map"></i> Mapa de ubicación
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d729.1516846696416!2d-99.95413485328243!3d19.71256559245506!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d2f5397abc4175%3A0x4d8673ada5bf13d9!2sAuto%20lavado!5e1!3m2!1ses!2smx!4v1748828036031!5m2!1ses!2smx" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-calendar-check text-primary"></i> Reservar
+                </h5>
+                {% if space.is_occupied %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> Este espacio está actualmente ocupado.
+                </div>
+                {% else %}
+                <p class="card-text">
+                    ¿Deseas reservar este espacio? Selecciona la fecha y hora de tu reserva.
+                </p>
+                <a href="{% url 'parking:reserve' space.pk %}" class="btn btn-primary btn-lg w-100">
+                    <i class="fas fa-calendar-plus"></i> Reservar Ahora
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle text-info"></i> Información Importante
+                </h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-clock text-primary"></i> Tarifa por hora: $20.00</li>
+                    <li><i class="fas fa-credit-card text-success"></i> Aceptamos todos los métodos de pago</li>
+                    <li><i class="fas fa-shield-alt text-warning"></i> Espacio vigilado 24/7</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

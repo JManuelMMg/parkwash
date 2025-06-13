@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Citas de Autolavado{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1 class="display-4">Mis Citas de Autolavado</h1>
+        <p class="lead">Gestiona tus citas de autolavado</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Servicio</th>
+                                <th>Vehículo</th>
+                                <th>Fecha y Hora</th>
+                                <th>Duración</th>
+                                <th>Precio</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in appointments %}
+                            <tr>
+                                <td>{{ appointment.service.name }}</td>
+                                <td>{{ appointment.vehicle.plate_number }}</td>
+                                <td>{{ appointment.appointment_time|date:"d/m/Y H:i" }}</td>
+                                <td>{{ appointment.service.duration }} minutos</td>
+                                <td>${{ appointment.service.price }}</td>
+                                <td>
+                                    {% if appointment.status == 'SCHEDULED' %}
+                                    <span class="badge bg-primary">Programada</span>
+                                    {% elif appointment.status == 'IN_PROGRESS' %}
+                                    <span class="badge bg-warning">En Progreso</span>
+                                    {% elif appointment.status == 'COMPLETED' %}
+                                    <span class="badge bg-success">Completada</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Cancelada</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'carwash:appointment_detail' appointment.pk %}" 
+                                           class="btn btn-sm btn-info" title="Ver detalles">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if appointment.status == 'SCHEDULED' %}
+                                        <a href="{% url 'carwash:cancel_appointment' appointment.pk %}" 
+                                           class="btn btn-sm btn-danger" title="Cancelar cita">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i> No tienes citas programadas.
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle text-info"></i> Información Importante
+                </h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-clock fa-2x text-primary mb-3"></i>
+                            <h5>Política de Cancelación</h5>
+                            <p>Puedes cancelar hasta 2 horas antes de tu cita</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-calendar-check fa-2x text-success mb-3"></i>
+                            <h5>Reprogramación</h5>
+                            <p>Contacta con nosotros para reprogramar tu cita</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-phone fa-2x text-info mb-3"></i>
+                            <h5>Soporte</h5>
+                            <p>¿Necesitas ayuda? Llámanos al +123 456 7890</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
