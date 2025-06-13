@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# Esperar a que la base de datos esté lista
-echo "Waiting for database..."
-while ! nc -z db 5432; do
-  sleep 0.1
-done
-echo "Database is ready!"
-
 # Aplicar migraciones
 echo "Applying migrations..."
 python manage.py migrate
@@ -15,6 +8,6 @@ python manage.py migrate
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
-# Iniciar el servidor
+# Iniciar el servidor con Gunicorn
 echo "Starting server..."
-python manage.py runserver 0.0.0.0:8000 
+gunicorn park.wsgi:application --bind 0.0.0.0:$PORT
